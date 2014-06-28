@@ -8,6 +8,9 @@ public class TechnicalTest {
 	private String testName;
 	private int testDuration;
 	private List<Map<String, String>> questions;
+	private List<String> bestRespones;
+	
+	
 	
 	
 
