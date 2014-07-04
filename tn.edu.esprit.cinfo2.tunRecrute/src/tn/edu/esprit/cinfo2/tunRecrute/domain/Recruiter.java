@@ -3,7 +3,7 @@ package tn.edu.esprit.cinfo2.tunRecrute.domain;
 import java.util.Date;
 
 public class Recruiter extends Member {
-	private int id;
+	private int idRecruiter;
 	private String organizationName;
 	private String organizationDescription;
 	private String organizationAddress;
@@ -14,12 +14,12 @@ public class Recruiter extends Member {
 
 
 	public Recruiter(int id, String login, String password, String firstName,
-			String lastName, String email, Date dateOfBirth, int id2,
+			String lastName, String email, Date dateOfBirth, int idRecruiter,
 			String organizationName, String organizationDescription,
 			String organizationAddress, String organizationDomain,
 			int employeesNumber, long organizationTurnover) {
 		super(id, login, password, firstName, lastName, email, dateOfBirth);
-		id = id2;
+		this.idRecruiter=idRecruiter;
 		this.organizationName = organizationName;
 		this.organizationDescription = organizationDescription;
 		this.organizationAddress = organizationAddress;
@@ -33,7 +33,7 @@ public class Recruiter extends Member {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + employeesNumber;
-		result = prime * result + id;
+		result = prime * result + idRecruiter;
 		result = prime
 				* result
 				+ ((organizationAddress == null) ? 0 : organizationAddress
@@ -65,7 +65,7 @@ public class Recruiter extends Member {
 		Recruiter other = (Recruiter) obj;
 		if (employeesNumber != other.employeesNumber)
 			return false;
-		if (id != other.id)
+		if (idRecruiter != other.idRecruiter)
 			return false;
 		if (organizationAddress == null) {
 			if (other.organizationAddress != null)
@@ -93,12 +93,14 @@ public class Recruiter extends Member {
 		return true;
 	}
 
-	public int getId() {
-		return id;
+
+	
+	public int getIdRecruiter() {
+		return idRecruiter;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdRecuiter(int id) {
+		this.idRecruiter = id;
 	}
 
 	public String getOrganizationName() {
@@ -151,7 +153,7 @@ public class Recruiter extends Member {
 
 	@Override
 	public String toString() {
-		return "Recruiter [id=" + id + ", organizationName=" + organizationName
+		return "Recruiter [id=" + idRecruiter + ", organizationName=" + organizationName
 				+ ", organizationDescription=" + organizationDescription
 				+ ", organizationAddress=" + organizationAddress
 				+ ", organizationDomain=" + organizationDomain

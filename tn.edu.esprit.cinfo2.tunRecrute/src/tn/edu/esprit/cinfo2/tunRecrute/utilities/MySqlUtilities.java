@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class MySqlUtilities {
 
 	private static Connection myConnection;
-	private static String url = "jdbc:mysql://localhost:3306";
+	private static String url = "jdbc:mysql://localhost:3306/tunrecrutdb";
 	private static String user = "root";
 	private static String password = "root";
 
