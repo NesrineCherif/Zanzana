@@ -5,16 +5,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IJobOffers;
+import tn.edu.esprit.cinfo2.tunRecrute.domain.CandidateOffer;
+import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.ICandidateOffer;
 import tn.edu.esprit.cinfo2.tunRecrute.utilities.MySqlUtilities;
 
 import com.mysql.jdbc.ResultSet;
 
-public class JobOffersImpl implements IJobOffers {
+public class CandidateOfferImpl implements ICandidateOffer {
 
 	@Override
-	public boolean addJobOffer(JobOffers jobOffer) {
+	public boolean addCandidateOffer(CandidateOffer candidateOffer) {
 		int updateCount = 0;
 		boolean isAdded = false;
 		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
@@ -22,16 +22,15 @@ public class JobOffersImpl implements IJobOffers {
 
 			Statement st = connection.createStatement();
 
-			String strQuerry = "INSERT INTO joboffers " + "VALUES ("
-					+ jobOffer.getId() + ",'" + jobOffer.getName() + "','"
-					+ jobOffer.getDescription() + "','"
-					+ jobOffer.getTestLink() + "'," + jobOffer.getIdRecruiter()
-					+ ")";
+			String strQuerry = "INSERT INTO candidate_offer " + "VALUES ("
+					+ candidateOffer.getId() + ","
+					+ candidateOffer.getIdCandidate() + ","
+					+ candidateOffer.getIdJobOffer() + " )";
 
 			st.executeUpdate(strQuerry);
 			updateCount = st.getUpdateCount();
 			if (updateCount != 0) {
-				System.out.println("Job Offer is inserted");
+				System.out.println("Candidate_Offer is inserted");
 				isAdded = true;
 			}
 
@@ -45,20 +44,21 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public boolean deleteJobOffer(int id) {
+	public boolean deleteCandidateOffer(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isDeleted = false;
 		int updateCount = 0;
 		try {
 
-			String strQuerry = "DELETE FROM joboffers WHERE id =" + id + "";
+			String strQuerry = "DELETE FROM candidate_offer WHERE id =" + id
+					+ "";
 			Statement st = connection.createStatement();
 			st.executeUpdate(strQuerry);
 
 			updateCount = st.getUpdateCount();
 
 			if (updateCount != 0) {
-				System.out.println("Job Offer is deleted");
+				System.out.println("Candidate_Offer is deleted");
 				isDeleted = true;
 			}
 
@@ -72,25 +72,24 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public boolean updateJobOffer(int id, JobOffers jobOffer) {
+	public boolean updateCandidateOffer(int id, CandidateOffer candidateOffer) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isUpdated = false;
 
 		int updateCount = 0;
 		try {
 
-			JobOffers jobOfferFound = findJobOffersById(id);
+			CandidateOffer candidateOfferFound = findCandidateOfferById(id);
 
-			if (jobOfferFound == null) {
-				System.out.println("JobOffer not found");
+			if (candidateOfferFound == null) {
+				System.out.println("candidateOffer not found");
 			} else {
 
 				Statement st = connection.createStatement();
-				String strCandidateQuerry = "UPDATE joboffers set " + " name="
-						+ "'" + jobOffer.getName() + "'" + ", description="
-						+ "'" + jobOffer.getDescription() + "'" + ", testLink="
-						+ "'" + jobOffer.getTestLink() + "'" + " WHERE id ="
-						+ jobOfferFound.getId();
+				String strCandidateQuerry = "UPDATE candidate_offer set "
+						+ " id_candidate=" + candidateOffer.getIdCandidate()
+						+ ", id_jobOffer=" + candidateOffer.getIdJobOffer()
+						+ " WHERE id =" + candidateOfferFound.getId();
 
 				st.executeUpdate(strCandidateQuerry);
 
@@ -111,32 +110,29 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public List<JobOffers> findAll() {
+	public List<CandidateOffer> findAll() {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
 		ResultSet resultSet = null;
 
-		List<JobOffers> jobOffers = new ArrayList<JobOffers>();
+		List<CandidateOffer> candidateOffers = new ArrayList<CandidateOffer>();
 
 		try {
 
-			String strQuerry = "SELECT * FROM joboffers ";
+			String strQuerry = "SELECT * FROM candidate_offer ";
 			Statement st = connection.createStatement();
 			st.executeQuery(strQuerry);
 			resultSet = (ResultSet) st.getResultSet();
 
 			while (resultSet.next()) {
-				int idJobOffer = resultSet.getInt("id");
-				int idRecruiter = resultSet.getInt("id_recruiter");
+				int idCandidateOffer = resultSet.getInt("id");
+				int idCandidate = resultSet.getInt("id_candidate");
+				int idJobOffer = resultSet.getInt("id_jobOffer");
 
-				String name = resultSet.getString("name");
-				String description = resultSet.getString("description");
-				String testLink = resultSet.getString("testLink");
+				CandidateOffer candidateOffer = new CandidateOffer(
+						idCandidateOffer, idCandidate, idJobOffer);
 
-				JobOffers jobOffer = new JobOffers(idJobOffer, name,
-						description, testLink, idRecruiter);
-
-				jobOffers.add(jobOffer);
+				candidateOffers.add(candidateOffer);
 			}
 
 			st.close();
@@ -145,33 +141,31 @@ public class JobOffersImpl implements IJobOffers {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return jobOffers;
+		return candidateOffers;
 	}
 
 	@Override
-	public JobOffers findJobOffersById(int id) {
+	public CandidateOffer findCandidateOfferById(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
 		ResultSet resultSet = null;
 
 		try {
 
-			String strQuerry = "SELECT * FROM joboffers WHERE id =" + id + "";
+			String strQuerry = "SELECT * FROM candidate_offer WHERE id =" + id
+					+ "";
 			Statement st = connection.createStatement();
 			st.executeQuery(strQuerry);
 			resultSet = (ResultSet) st.getResultSet();
 
 			while (resultSet.next()) {
-				int idRecruiter = resultSet.getInt("id_recruiter");
+				int idJobOffer = resultSet.getInt("id_jobOffer");
+				int idCandidate = resultSet.getInt("id_candidate");
 
-				String name = resultSet.getString("name");
-				String description = resultSet.getString("description");
-				String testLink = resultSet.getString("testLink");
+				CandidateOffer candidateOffer = new CandidateOffer(id,
+						idCandidate, idJobOffer);
 
-				JobOffers jobOffer = new JobOffers(id, name, description,
-						testLink, idRecruiter);
-
-				return jobOffer;
+				return candidateOffer;
 			}
 
 			st.close();

@@ -5,16 +5,19 @@ public class JobOffers {
 	private String name;
 	private String description;
 	private String testLink;
+	private int idRecruiter;
 
 	public JobOffers() {
 	}
 
-	public JobOffers(int id, String name, String description, String testLink) {
+	public JobOffers(int id, String name, String description, String testLink,
+			int idRecruiter) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.testLink = testLink;
+		this.idRecruiter = idRecruiter;
 	}
 
 	@Override
@@ -24,6 +27,7 @@ public class JobOffers {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
+		result = prime * result + idRecruiter;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result
 				+ ((testLink == null) ? 0 : testLink.hashCode());
@@ -45,6 +49,8 @@ public class JobOffers {
 		} else if (!description.equals(other.description))
 			return false;
 		if (id != other.id)
+			return false;
+		if (idRecruiter != other.idRecruiter)
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -91,10 +97,19 @@ public class JobOffers {
 		this.testLink = testLink;
 	}
 
+	public int getIdRecruiter() {
+		return idRecruiter;
+	}
+
+	public void setIdRecruiter(int idRecruiter) {
+		this.idRecruiter = idRecruiter;
+	}
+
 	@Override
 	public String toString() {
 		return "JobOffers [id=" + id + ", name=" + name + ", description="
-				+ description + ", testLink=" + testLink + "]";
+				+ description + ", testLink=" + testLink + ", idRecruiter="
+				+ idRecruiter + "]";
 	}
 
 }
