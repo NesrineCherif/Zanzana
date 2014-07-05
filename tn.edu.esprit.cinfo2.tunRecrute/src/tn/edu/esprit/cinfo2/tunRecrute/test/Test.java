@@ -9,6 +9,7 @@ import tn.edu.esprit.cinfo2.tunRecrute.domain.CandidateOffer;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Member;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
+import tn.edu.esprit.cinfo2.tunRecrute.service.business.Business;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateImpl;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateOfferImpl;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.JobOffersImpl;
@@ -180,5 +181,10 @@ public class Test {
 				}
 			}
 			candidateOfferImpl.updateCandidateOffer(1, candidateOffer);	
+			
+			
+			Business business = new Business();
+			
+			business.authentification("adaaamin", "admin");
 	}	
 }
