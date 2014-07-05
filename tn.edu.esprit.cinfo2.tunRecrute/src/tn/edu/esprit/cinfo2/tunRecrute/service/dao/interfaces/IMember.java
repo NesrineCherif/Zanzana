@@ -6,7 +6,7 @@ import tn.edu.esprit.cinfo2.tunRecrute.domain.Member;
 
 public interface IMember {
 
-	public boolean addMember(Member member);
+	public int addMember(Object member);
 
 	public boolean deleteMember(int id);
 

@@ -2,7 +2,7 @@ package tn.edu.esprit.cinfo2.tunRecrute.domain;
 
 import java.util.Date;
 
-public abstract class Member {
+public  class Member {
 	
 	private int id;
 	private String login;

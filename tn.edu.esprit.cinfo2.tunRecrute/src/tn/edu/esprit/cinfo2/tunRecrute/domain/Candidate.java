@@ -3,16 +3,15 @@ package tn.edu.esprit.cinfo2.tunRecrute.domain;
 import java.util.Date;
 
 public class Candidate extends Member {
-	private int id;
+	private int idCandidate;
 	private String resume;
 	private String cvPath;
 
-	
 	public Candidate(int id, String login, String password, String firstName,
-			String lastName, String email, Date dateOfBirth, int id2,
+			String lastName, String email, Date dateOfBirth, int idCandidate,
 			String resume, String cvPath) {
 		super(id, login, password, firstName, lastName, email, dateOfBirth);
-		id = id2;
+		this.idCandidate = idCandidate;
 		this.resume = resume;
 		this.cvPath = cvPath;
 	}
@@ -22,7 +21,7 @@ public class Candidate extends Member {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((cvPath == null) ? 0 : cvPath.hashCode());
-		result = prime * result + id;
+		result = prime * result + idCandidate;
 		result = prime * result + ((resume == null) ? 0 : resume.hashCode());
 		return result;
 	}
@@ -41,7 +40,7 @@ public class Candidate extends Member {
 				return false;
 		} else if (!cvPath.equals(other.cvPath))
 			return false;
-		if (id != other.id)
+		if (idCandidate != other.idCandidate)
 			return false;
 		if (resume == null) {
 			if (other.resume != null)
@@ -51,12 +50,12 @@ public class Candidate extends Member {
 		return true;
 	}
 
-	public int getId() {
-		return id;
+	public int getIdCandidate() {
+		return idCandidate;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdCandidate(int id) {
+		this.idCandidate = id;
 	}
 
 	public String getResume() {
@@ -77,8 +76,8 @@ public class Candidate extends Member {
 
 	@Override
 	public String toString() {
-		return "Candidate [id=" + id + ", resume=" + resume + ", cvPath="
-				+ cvPath + "]";
+		return "Candidate [id=" + idCandidate + ", resume=" + resume
+				+ ", cvPath=" + cvPath + "]";
 	}
 
 }

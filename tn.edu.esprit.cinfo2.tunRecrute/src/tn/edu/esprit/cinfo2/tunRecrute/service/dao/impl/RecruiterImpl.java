@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
@@ -17,30 +18,17 @@ public class RecruiterImpl implements IRecruiter {
 
 	@Override
 	public boolean addRecruiter(Recruiter recruiter) {
-		ResultSet rs = null;
 		int idMember = 0;
 		int updateCount = 0;
 		boolean isAdded = false;
 		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dateOfBirth = dateFormat.format(recruiter.getDateOfBirth());
 		try {
-
+			MemberImpl memberImpl=new MemberImpl();
 			Statement st = connection.createStatement();
-
-			String memberQuery = "INSERT INTO member VALUES ("
-					+ recruiter.getId() + ",'" + recruiter.getLogin() + "','"
-					+ recruiter.getPassword() + "','"
-					+ recruiter.getFirstName() + "','"
-					+ recruiter.getLastName() + "','" + recruiter.getEmail()
-					+ "','" + dateOfBirth + "')";
-
-			st.executeUpdate(memberQuery);
-			updateCount = st.getUpdateCount();
-			rs = (ResultSet) st.getGeneratedKeys();
-			if (rs.next() && updateCount != 0) {
-				System.out.println("Member is inserted !!");
-				idMember = rs.getInt(1);
+		
+			idMember=memberImpl.addMember(recruiter);
+			if (idMember != 0) {
+				
 				String strQuerry = "INSERT INTO recruiter " + "VALUES ("
 						+ recruiter.getId() + ",'"
 						+ recruiter.getOrganizationName() + "','"
@@ -174,8 +162,73 @@ public class RecruiterImpl implements IRecruiter {
 
 	@Override
 	public List<Recruiter> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Connection connection = MySqlUtilities.GiveMeConnection();
+
+		ResultSet resultSet = null;
+		ResultSet memberResultSet = null;
+
+		String login = null;
+		String password = null;
+		String firstName = null;
+		String lastName = null;
+		String email = null;
+		Date dateOfBirth = null;
+		List<Recruiter> recruiters = new ArrayList<Recruiter>();
+
+		try {
+
+			String strQuerry = "SELECT * FROM recruiter ";
+			Statement st = connection.createStatement();
+			st.executeQuery(strQuerry);
+			resultSet = (ResultSet) st.getResultSet();
+
+			while (resultSet.next()) {
+				int idRecruiter = resultSet.getInt("id");
+				int idMember = resultSet.getInt("id_member");
+
+				String memberQuerry = "SELECT * FROM member WHERE id ="
+						+ idMember + "";
+				Statement stMember = connection.createStatement();
+				stMember.executeQuery(memberQuerry);
+				memberResultSet = (ResultSet) stMember.getResultSet();
+				while (memberResultSet.next()) {
+					login = memberResultSet.getString("login");
+					password = memberResultSet.getString("password");
+					firstName = memberResultSet.getString("firstName");
+					lastName = memberResultSet.getString("lastName");
+					email = memberResultSet.getString("email");
+					dateOfBirth = memberResultSet.getDate("dateOfBirth");
+				}
+
+				String organizationName = resultSet
+						.getString("organizationName");
+				String organizationDescription = resultSet
+						.getString("organizationDescription");
+				String organizationAddress = resultSet
+						.getString("organizationAddress");
+				String organizationDomain = resultSet
+						.getString("organizationDomain");
+				int employeesNumber = resultSet.getInt("employeesNumber");
+				long organizationTurnover = resultSet
+						.getLong("organizationTurnover");
+
+				Recruiter recruiter = new Recruiter(idMember, login, password,
+						firstName, lastName, email, dateOfBirth, idRecruiter,
+						organizationName, organizationDescription,
+						organizationAddress, organizationDomain,
+						employeesNumber, organizationTurnover);
+
+				recruiters.add(recruiter);
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return recruiters;
 	}
 
 	@Override
