@@ -10,6 +10,7 @@ import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Member;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
 import tn.edu.esprit.cinfo2.tunRecrute.service.business.Business;
+import tn.edu.esprit.cinfo2.tunRecrute.service.business.JobOffersBusiness;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateImpl;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateOfferImpl;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.JobOffersImpl;
@@ -21,11 +22,18 @@ public class Test {
 
 		Date date = new Date();
 
-		 Recruiter recruiter = new Recruiter(0, "jihed1", "00e001", "jiehed",
+		 Recruiter recruiter = new Recruiter(13, "jihed1", "00e001", "jiehed",
 		 "ben taher", "jihed@gmail.com", date,
-		 0, "tritux", "boite dev", "eetunis - montplaisir", "dev", 50, 50000);
-
-		 RecruiterImpl recruiterImpl = new RecruiterImpl();
+		 13, "tritux", "boite dev", "eetunis - montplaisir", "dev", 50, 50000);
+		 JobOffers offer =  new JobOffers(10, "dev java/jee", "description dev java/jee", "www.google.com", recruiter);
+		 CandidateImpl candidateImpl= new CandidateImpl();
+		 
+		 Candidate candidate = candidateImpl.findById(4);
+		 Business business = new Business();
+		 //business.applyForJobOffer(candidate, offer);
+		 business.checkJobApplication(48);
+		 //business.postJobOffer(recruiter, offer);
+//		 RecruiterImpl recruiterImpl = new RecruiterImpl();
 
 //		 recruiterImpl.addRecruiter(recruiter);
 		// recruiterImpl.deleteRecruiter(26);
@@ -86,10 +94,10 @@ public class Test {
 //		}
 //		Candidate candidate = new Candidate(0, "azz", "azzz", "zzzb", "vzzz", "emailzzz", date, 0, "resumezzz", "cvPathzzzz");
 //		
-//		CandidateImpl candidateImpl=new CandidateImpl();
+//		CandidateImpl candidateImpl=CandidateImpl.getInstanceof();
 //		
-//		candidateImpl.addCandidate(candidate);
-//		candidateImpl.deleteCandidate(40);
+//		candidateImpl.add(candidate);
+//		candidateImpl.remove(40);
 //		
 //		Candidate result = candidateImpl.findCandidateById(4);
 //		
@@ -146,45 +154,59 @@ public class Test {
 //							}
 //						}
 		
-		CandidateOffer candidateOffer = new CandidateOffer(0, 5, 5);
-		
-		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
-		
-		
-		candidateOfferImpl.addCandidateOffer(candidateOffer);
-		
-		candidateOfferImpl.deleteCandidateOffer(4);
-		
-		
-		CandidateOffer result = candidateOfferImpl.findCandidateOfferById(5);
-//	
-			if (result == null) {
-				System.out.println("Candidate_Job_Offer not found");
-			} else {
-				System.out.println("ID Candidate : " + result.getIdCandidate());
-				
-			}
-			
-			
-			System.out.println("find all");
+//		CandidateOffer candidateOffer = new CandidateOffer(0, 5, 5);
+//		
+//		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
+//		
+//		
+//		candidateOfferImpl.addCandidateOffer(candidateOffer);
+//		
+//		candidateOfferImpl.deleteCandidateOffer(4);
+//		
+//		
+//		CandidateOffer result = candidateOfferImpl.findCandidateOfferById(5);
+////	
+//			if (result == null) {
+//				System.out.println("Candidate_Job_Offer not found");
+//			} else {
+//				System.out.println("ID Candidate : " + result.getIdCandidate());
+//				
+//			}
 //			
-			List<CandidateOffer> candidateOffers = candidateOfferImpl.findAll();
-			if (candidateOffers == null) {
-				System.out.println("There is no candidate_offers found");
-			} else {
-				Iterator<CandidateOffer> i = candidateOffers.iterator();
-				while (i.hasNext()) {
-	
-					CandidateOffer candidateOffer2 = i.next();
-					System.out.println(candidateOffer2.getId());
-	
-				}
-			}
-			candidateOfferImpl.updateCandidateOffer(1, candidateOffer);	
-			
-			
-			Business business = new Business();
-			
-			business.authentification("adaaamin", "admin");
+//			
+//			System.out.println("find all");
+////			
+//			List<CandidateOffer> candidateOffers = candidateOfferImpl.findAll();
+//			if (candidateOffers == null) {
+//				System.out.println("There is no candidate_offers found");
+//			} else {
+//				Iterator<CandidateOffer> i = candidateOffers.iterator();
+//				while (i.hasNext()) {
+//	
+//					CandidateOffer candidateOffer2 = i.next();
+//					System.out.println(candidateOffer2.getId());
+//	
+//				}
+//			}
+//			candidateOfferImpl.updateCandidateOffer(1, candidateOffer);	
+//			
+//			
+//			Business business = new Business();
+//			
+//			business.authentification("admin", "admin");
+		
+//		JobOffersBusiness jobOffersBusiness = new JobOffersBusiness();
+//		List<JobOffers> candidateOffers = jobOffersBusiness.findJobOfferByKeyWord("jee");
+//		if (candidateOffers == null) {
+//			System.out.println("There is no candidate_offers found");
+//		} else {
+//			Iterator<JobOffers> i = candidateOffers.iterator();
+//			while (i.hasNext()) {
+//
+//				JobOffers candidateOffer2 = i.next();
+//				System.out.println(candidateOffer2.getId()+" "+candidateOffer2.getName());
+//
+//			}
+//		}
 	}	
 }

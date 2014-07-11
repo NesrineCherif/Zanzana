@@ -6,15 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IJobOffers;
+import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IGenericDao;
 import tn.edu.esprit.cinfo2.tunRecrute.utilities.MySqlUtilities;
 
 import com.mysql.jdbc.ResultSet;
 
-public class JobOffersImpl implements IJobOffers {
-
+public class JobOffersImpl implements IGenericDao<JobOffers> {
+	private static JobOffersImpl instancesof;
+	public JobOffersImpl() {
+	}
 	@Override
-	public boolean addJobOffer(JobOffers jobOffer) {
+	public boolean add(JobOffers jobOffer) {
 		int updateCount = 0;
 		boolean isAdded = false;
 		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
@@ -25,8 +27,8 @@ public class JobOffersImpl implements IJobOffers {
 			String strQuerry = "INSERT INTO joboffers " + "VALUES ("
 					+ jobOffer.getId() + ",'" + jobOffer.getName() + "','"
 					+ jobOffer.getDescription() + "','"
-					+ jobOffer.getTestLink() + "'," + jobOffer.getIdRecruiter()
-					+ ")";
+					+ jobOffer.getTestLink() + "',"
+					+ jobOffer.getRecruiter().getIdRecruiter() + ")";
 
 			st.executeUpdate(strQuerry);
 			updateCount = st.getUpdateCount();
@@ -45,7 +47,7 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public boolean deleteJobOffer(int id) {
+	public boolean remove(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isDeleted = false;
 		int updateCount = 0;
@@ -72,14 +74,14 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public boolean updateJobOffer(int id, JobOffers jobOffer) {
+	public boolean update(int id, JobOffers jobOffer) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isUpdated = false;
 
 		int updateCount = 0;
 		try {
 
-			JobOffers jobOfferFound = findJobOffersById(id);
+			JobOffers jobOfferFound = findById(id);
 
 			if (jobOfferFound == null) {
 				System.out.println("JobOffer not found");
@@ -133,8 +135,11 @@ public class JobOffersImpl implements IJobOffers {
 				String description = resultSet.getString("description");
 				String testLink = resultSet.getString("testLink");
 
+				RecruiterImpl recruiterImpl = new RecruiterImpl();
+
 				JobOffers jobOffer = new JobOffers(idJobOffer, name,
-						description, testLink, idRecruiter);
+						description, testLink,
+						recruiterImpl.findById(idRecruiter));
 
 				jobOffers.add(jobOffer);
 			}
@@ -149,7 +154,7 @@ public class JobOffersImpl implements IJobOffers {
 	}
 
 	@Override
-	public JobOffers findJobOffersById(int id) {
+	public JobOffers findById(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
 		ResultSet resultSet = null;
@@ -163,13 +168,16 @@ public class JobOffersImpl implements IJobOffers {
 
 			while (resultSet.next()) {
 				int idRecruiter = resultSet.getInt("id_recruiter");
-
+				int idJobOffer = resultSet.getInt("id");
 				String name = resultSet.getString("name");
 				String description = resultSet.getString("description");
 				String testLink = resultSet.getString("testLink");
 
-				JobOffers jobOffer = new JobOffers(id, name, description,
-						testLink, idRecruiter);
+				RecruiterImpl recruiterImpl = new RecruiterImpl();
+
+				JobOffers jobOffer = new JobOffers(idJobOffer, name,
+						description, testLink,
+						recruiterImpl.findById(idRecruiter));
 
 				return jobOffer;
 			}
@@ -182,5 +190,12 @@ public class JobOffersImpl implements IJobOffers {
 		}
 		return null;
 	}
+	
+	
+	public static JobOffersImpl getInstanceof() {
+		if (instancesof == null)
+			instancesof = new JobOffersImpl();
 
+		return instancesof;
+	}
 }

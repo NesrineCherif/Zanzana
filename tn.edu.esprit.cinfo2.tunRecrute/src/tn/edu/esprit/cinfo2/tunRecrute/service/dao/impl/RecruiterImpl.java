@@ -9,26 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IRecruiter;
+import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IGenericDao;
 import tn.edu.esprit.cinfo2.tunRecrute.utilities.MySqlUtilities;
 
 import com.mysql.jdbc.ResultSet;
 
-public class RecruiterImpl implements IRecruiter {
+public class RecruiterImpl implements IGenericDao<Recruiter> {
+	private static RecruiterImpl instancesof;
+
+	public RecruiterImpl() {
+	}
 
 	@Override
-	public boolean addRecruiter(Recruiter recruiter) {
+	public boolean add(Recruiter recruiter) {
 		int idMember = 0;
 		int updateCount = 0;
 		boolean isAdded = false;
 		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
 		try {
-			MemberImpl memberImpl=new MemberImpl();
+			MemberImpl memberImpl = new MemberImpl();
 			Statement st = connection.createStatement();
-		
-			idMember=memberImpl.addMember(recruiter);
+
+			idMember = memberImpl.addMember(recruiter);
 			if (idMember != 0) {
-				
+
 				String strQuerry = "INSERT INTO recruiter " + "VALUES ("
 						+ recruiter.getId() + ",'"
 						+ recruiter.getOrganizationName() + "','"
@@ -57,7 +61,7 @@ public class RecruiterImpl implements IRecruiter {
 	}
 
 	@Override
-	public boolean deleteRecruiter(int id) {
+	public boolean remove(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isDeleted = false;
 		int updateCount = 0;
@@ -84,14 +88,14 @@ public class RecruiterImpl implements IRecruiter {
 	}
 
 	@Override
-	public boolean updateRecruiter(int id, Recruiter recruiter) {
+	public boolean update(int id, Recruiter recruiter) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isUpdated = false;
 
 		int updateCount = 0;
 		try {
 
-			Recruiter recruiterFound = findRecruiterById(id);
+			Recruiter recruiterFound = findById(id);
 
 			if (recruiterFound == null) {
 				System.out.println("Recruiter not found");
@@ -232,7 +236,7 @@ public class RecruiterImpl implements IRecruiter {
 	}
 
 	@Override
-	public Recruiter findRecruiterById(int id) {
+	public Recruiter findById(int id) {
 
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
@@ -299,5 +303,81 @@ public class RecruiterImpl implements IRecruiter {
 		}
 		return null;
 	}
+	
+	
+	
+	public Recruiter findRecruiterByMemberId(int id) {
 
+		Connection connection = MySqlUtilities.GiveMeConnection();
+
+		ResultSet resultSet = null;
+		ResultSet memberResultSet = null;
+
+		String login = null;
+		String password = null;
+		String firstName = null;
+		String lastName = null;
+		String email = null;
+		Date dateOfBirth = null;
+
+		try {
+
+			String strQuerry = "SELECT * FROM recruiter WHERE id_member =" + id + "";
+			Statement st = connection.createStatement();
+			st.executeQuery(strQuerry);
+			resultSet = (ResultSet) st.getResultSet();
+
+			while (resultSet.next()) {
+				int idMember = resultSet.getInt("id_member");
+
+				String memberQuerry = "SELECT * FROM member WHERE id ="
+						+ idMember + "";
+				Statement stMember = connection.createStatement();
+				stMember.executeQuery(memberQuerry);
+				memberResultSet = (ResultSet) stMember.getResultSet();
+				while (memberResultSet.next()) {
+					login = memberResultSet.getString("login");
+					password = memberResultSet.getString("password");
+					firstName = memberResultSet.getString("firstName");
+					lastName = memberResultSet.getString("lastName");
+					email = memberResultSet.getString("email");
+					dateOfBirth = memberResultSet.getDate("dateOfBirth");
+				}
+
+				String organizationName = resultSet
+						.getString("organizationName");
+				String organizationDescription = resultSet
+						.getString("organizationDescription");
+				String organizationAddress = resultSet
+						.getString("organizationAddress");
+				String organizationDomain = resultSet
+						.getString("organizationDomain");
+				int employeesNumber = resultSet.getInt("employeesNumber");
+				long organizationTurnover = resultSet
+						.getLong("organizationTurnover");
+
+				Recruiter recruiter = new Recruiter(idMember, login, password,
+						firstName, lastName, email, dateOfBirth, id,
+						organizationName, organizationDescription,
+						organizationAddress, organizationDomain,
+						employeesNumber, organizationTurnover);
+
+				return recruiter;
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static RecruiterImpl getInstanceof() {
+		if (instancesof == null)
+			instancesof = new RecruiterImpl();
+
+		return instancesof;
+	}
 }

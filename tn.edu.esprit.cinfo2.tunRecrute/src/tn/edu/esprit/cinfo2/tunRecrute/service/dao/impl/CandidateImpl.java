@@ -9,15 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Candidate;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.ICandidate;
+import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IGenericDao;
 import tn.edu.esprit.cinfo2.tunRecrute.utilities.MySqlUtilities;
 
 import com.mysql.jdbc.ResultSet;
 
-public class CandidateImpl implements ICandidate {
+public class CandidateImpl implements IGenericDao<Candidate> {
+	private static CandidateImpl instancesof;
+
+	public CandidateImpl() {
+	}
 
 	@Override
-	public boolean addCandidate(Candidate candidate) {
+	public boolean add(Candidate candidate) {
 		int idMember = 0;
 		int updateCount = 0;
 		boolean isAdded = false;
@@ -52,7 +56,7 @@ public class CandidateImpl implements ICandidate {
 	}
 
 	@Override
-	public boolean deleteCandidate(int id) {
+	public boolean remove(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isDeleted = false;
 		int updateCount = 0;
@@ -79,14 +83,14 @@ public class CandidateImpl implements ICandidate {
 	}
 
 	@Override
-	public boolean updateCandidate(int id, Candidate candidate) {
+	public boolean update(int id, Candidate candidate) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isUpdated = false;
 
 		int updateCount = 0;
 		try {
 
-			Candidate candidateFound = findCandidateById(id);
+			Candidate candidateFound = findById(id);
 
 			if (candidateFound == null) {
 				System.out.println("Candidate not found");
@@ -101,7 +105,8 @@ public class CandidateImpl implements ICandidate {
 						+ candidate.getFirstName() + "'" + ", lastName=" + "'"
 						+ candidate.getLastName() + "'" + ", email=" + "'"
 						+ candidate.getEmail() + "'" + ", dateOfBirth=" + "'"
-						+ dateOfBirth + "'" + " WHERE id =" + candidateFound.getId();
+						+ dateOfBirth + "'" + " WHERE id ="
+						+ candidateFound.getId();
 
 				st.executeUpdate(strQuerry);
 
@@ -110,7 +115,7 @@ public class CandidateImpl implements ICandidate {
 				if (updateCount != 0) {
 					String strCandidateQuerry = "UPDATE candidate set "
 							+ " resume=" + "'" + candidate.getResume() + "'"
-							+ ", cvPath=" + "'" + candidate.getCvPath()+"'"
+							+ ", cvPath=" + "'" + candidate.getCvPath() + "'"
 
 							+ " WHERE id =" + candidateFound.getIdCandidate();
 
@@ -193,7 +198,7 @@ public class CandidateImpl implements ICandidate {
 	}
 
 	@Override
-	public Candidate findCandidateById(int id) {
+	public Candidate findById(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
 		ResultSet resultSet = null;
@@ -248,5 +253,68 @@ public class CandidateImpl implements ICandidate {
 		}
 		return null;
 	}
+	
+	
+	public Candidate findCandidateByMemberId(int id) {
+		Connection connection = MySqlUtilities.GiveMeConnection();
 
+		ResultSet resultSet = null;
+		ResultSet memberResultSet = null;
+
+		String login = null;
+		String password = null;
+		String firstName = null;
+		String lastName = null;
+		String email = null;
+		Date dateOfBirth = null;
+
+		try {
+
+			String strQuerry = "SELECT * FROM candidate WHERE id_member =" + id + "";
+			Statement st = connection.createStatement();
+			st.executeQuery(strQuerry);
+			resultSet = (ResultSet) st.getResultSet();
+
+			while (resultSet.next()) {
+				int idCandidate = resultSet.getInt("id");
+
+				String memberQuerry = "SELECT * FROM member WHERE id ="
+						+ id + "";
+				Statement stMember = connection.createStatement();
+				stMember.executeQuery(memberQuerry);
+				memberResultSet = (ResultSet) stMember.getResultSet();
+				while (memberResultSet.next()) {
+					login = memberResultSet.getString("login");
+					password = memberResultSet.getString("password");
+					firstName = memberResultSet.getString("firstName");
+					lastName = memberResultSet.getString("lastName");
+					email = memberResultSet.getString("email");
+					dateOfBirth = memberResultSet.getDate("dateOfBirth");
+				}
+
+				String resume = resultSet.getString("resume");
+				String cvPath = resultSet.getString("cvPath");
+
+				Candidate candidate = new Candidate(id, login, password,
+						firstName, lastName, email, dateOfBirth, idCandidate, resume,
+						cvPath);
+
+				return candidate;
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static CandidateImpl getInstanceof() {
+		if (instancesof == null)
+			instancesof = new CandidateImpl();
+
+		return instancesof;
+	}
 }

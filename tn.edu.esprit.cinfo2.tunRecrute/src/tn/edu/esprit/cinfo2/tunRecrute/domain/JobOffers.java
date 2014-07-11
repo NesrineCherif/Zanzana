@@ -5,19 +5,19 @@ public class JobOffers {
 	private String name;
 	private String description;
 	private String testLink;
-	private int idRecruiter;
+	private Recruiter recruiter;
 
 	public JobOffers() {
 	}
 
 	public JobOffers(int id, String name, String description, String testLink,
-			int idRecruiter) {
+			Recruiter recruiter) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.testLink = testLink;
-		this.idRecruiter = idRecruiter;
+		this.recruiter = recruiter;
 	}
 
 	@Override
@@ -27,8 +27,9 @@ public class JobOffers {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
-		result = prime * result + idRecruiter;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((recruiter == null) ? 0 : recruiter.hashCode());
 		result = prime * result
 				+ ((testLink == null) ? 0 : testLink.hashCode());
 		return result;
@@ -50,12 +51,15 @@ public class JobOffers {
 			return false;
 		if (id != other.id)
 			return false;
-		if (idRecruiter != other.idRecruiter)
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
+			return false;
+		if (recruiter == null) {
+			if (other.recruiter != null)
+				return false;
+		} else if (!recruiter.equals(other.recruiter))
 			return false;
 		if (testLink == null) {
 			if (other.testLink != null)
@@ -97,19 +101,19 @@ public class JobOffers {
 		this.testLink = testLink;
 	}
 
-	public int getIdRecruiter() {
-		return idRecruiter;
+	public Recruiter getRecruiter() {
+		return recruiter;
 	}
 
-	public void setIdRecruiter(int idRecruiter) {
-		this.idRecruiter = idRecruiter;
+	public void setRecruiter(Recruiter recruiter) {
+		this.recruiter = recruiter;
 	}
 
 	@Override
 	public String toString() {
 		return "JobOffers [id=" + id + ", name=" + name + ", description="
-				+ description + ", testLink=" + testLink + ", idRecruiter="
-				+ idRecruiter + "]";
+				+ description + ", testLink=" + testLink + ", recruiter="
+				+ recruiter + "]";
 	}
 
 }

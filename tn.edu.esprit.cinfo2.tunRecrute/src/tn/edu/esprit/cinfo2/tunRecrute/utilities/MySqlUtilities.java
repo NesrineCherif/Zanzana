@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class MySqlUtilities {
 
 	private static Connection myConnection;
-	private static String url = "jdbc:mysql://localhost:3306/tunrecrutdb";
+	private static String url = "jdbc:mysql://localhost/tunrecrutdb";
 	private static String user = "root";
 	private static String password = "root";
 
@@ -15,9 +15,9 @@ public class MySqlUtilities {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Driver loaded");
+
 			myConnection = DriverManager.getConnection(url, user, password);
-			System.out.println("Connetion established");
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

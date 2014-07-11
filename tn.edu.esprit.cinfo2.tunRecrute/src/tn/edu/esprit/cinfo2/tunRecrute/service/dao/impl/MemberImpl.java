@@ -9,30 +9,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Member;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IMember;
+import tn.edu.esprit.cinfo2.tunRecrute.service.dao.interfaces.IGenericDao;
 import tn.edu.esprit.cinfo2.tunRecrute.utilities.MySqlUtilities;
 
 import com.mysql.jdbc.ResultSet;
 
-public class MemberImpl implements IMember {
+public class MemberImpl implements IGenericDao<Member> {
+	private static MemberImpl instancesof;
 
-	@Override
+	public MemberImpl() {
+	}
+
 	public int addMember(Object member) {
 		ResultSet rs = null;
 		int updateCount = 0;
 		int idMember = 0;
 		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String dateOfBirth = dateFormat.format(((Member) member).getDateOfBirth());
+		String dateOfBirth = dateFormat.format(((Member) member)
+				.getDateOfBirth());
 		try {
 
 			Statement st = connection.createStatement();
 
-			String memberQuery = "INSERT INTO member VALUES (" + ((Member) member).getId()
-					+ ",'" + ((Member) member).getLogin() + "','" + ((Member) member).getPassword()
-					+ "','" + ((Member) member).getFirstName() + "','"
-					+ ((Member) member).getLastName() + "','" + ((Member) member).getEmail() + "','"
-					+ dateOfBirth + "')";
+			String memberQuery = "INSERT INTO member VALUES ("
+					+ ((Member) member).getId() + ",'"
+					+ ((Member) member).getLogin() + "','"
+					+ ((Member) member).getPassword() + "','"
+					+ ((Member) member).getFirstName() + "','"
+					+ ((Member) member).getLastName() + "','"
+					+ ((Member) member).getEmail() + "','" + dateOfBirth + "')";
 
 			st.executeUpdate(memberQuery);
 			updateCount = st.getUpdateCount();
@@ -53,7 +59,7 @@ public class MemberImpl implements IMember {
 	}
 
 	@Override
-	public boolean deleteMember(int id) {
+	public boolean remove(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isDeleted = false;
 		int updateCount = 0;
@@ -80,14 +86,14 @@ public class MemberImpl implements IMember {
 	}
 
 	@Override
-	public boolean updateMember(int id, Member member) {
+	public boolean update(int id, Member member) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 		boolean isUpdated = false;
 
 		int updateCount = 0;
 		try {
 
-			Member memberFound = findMemberById(id);
+			Member memberFound = findById(id);
 
 			if (memberFound == null) {
 				System.out.println("Member not found");
@@ -170,7 +176,7 @@ public class MemberImpl implements IMember {
 	}
 
 	@Override
-	public Member findMemberById(int id) {
+	public Member findById(int id) {
 		Connection connection = MySqlUtilities.GiveMeConnection();
 
 		ResultSet memberResultSet = null;
@@ -210,6 +216,18 @@ public class MemberImpl implements IMember {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static MemberImpl getInstanceof() {
+		if (instancesof == null)
+			instancesof = new MemberImpl();
+
+		return instancesof;
+	}
+
+	@Override
+	public boolean add(Member object) {
+		return false;
 	}
 
 }
