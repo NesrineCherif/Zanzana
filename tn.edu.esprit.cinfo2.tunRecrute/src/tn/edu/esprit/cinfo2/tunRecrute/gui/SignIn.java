@@ -51,6 +51,7 @@ public class SignIn extends JFrame {
 		this.setSize(new Dimension(300, 200));
 		// On ne pourra pas agrandir la fenetre intitul�e.
 		this.setResizable(false);
+		this.setLocationRelativeTo(null);
 
 		/* R�cup�ration du ContentPane */
 		Container contenu = this.getContentPane();

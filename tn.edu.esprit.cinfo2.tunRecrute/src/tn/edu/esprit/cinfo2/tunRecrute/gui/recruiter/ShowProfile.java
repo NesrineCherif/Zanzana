@@ -79,80 +79,127 @@ public class ShowProfile extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Home");
 		menu.setMnemonic(KeyEvent.VK_H);
-		menu.getAccessibleContext().setAccessibleDescription("zzzzzzzzzzzz");
+
 		menuBar.add(menu);
+		JMenuItem menuItemHome = new JMenuItem("home", KeyEvent.VK_H);
+
+		menu.add(menuItemHome);
+		ActionListener homeActionListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				HomeRecruiter homeRecruiter = new HomeRecruiter(recruiter);
+				homeRecruiter.setVisible(true);
+			}
+		};
+
+		menuItemHome.addActionListener(homeActionListener);
 
 		// Build second menu in the menu bar.
 		menu = new JMenu("Profile");
 		menu.setMnemonic(KeyEvent.VK_P);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"This menu does nothing");
 
 		JMenuItem menuItem = new JMenuItem("Show Profile", KeyEvent.VK_S);
 
-		menuItem.getAccessibleContext().setAccessibleDescription(
-				"This doesn't really do anything");
 		menu.add(menuItem);
-		
-		ActionListener showProfile = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		};
-		
-		JMenuItem menuItem11 = new JMenuItem("Edit Profile", KeyEvent.VK_E);
 
-		menu.add(menuItem11);
-		
-ActionListener editProfileAction = new ActionListener() {
-			
+		ActionListener showProfile = new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				//EditProfile editProfile = new EditProfile(candidate);
-				//editProfile.setVisible(true);
+				ShowProfile showProfile = new ShowProfile(recruiter);
+				showProfile.setVisible(true);
+			}
+		};
+
+		menuItem.addActionListener(showProfile);
+
+		JMenuItem menuItem11 = new JMenuItem("Edit Profile", KeyEvent.VK_E);
+
+		menu.add(menuItem11);
+
+		ActionListener editProfileAction = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				EditProfile editProfile = new EditProfile(recruiter);
+				editProfile.setVisible(true);
 			}
 		};
 		menuItem11.addActionListener(editProfileAction);
 
 		JMenuItem menuItem111 = new JMenuItem("Unsubscribe", KeyEvent.VK_U);
 
-		menuItem111.getAccessibleContext().setAccessibleDescription(
-				"This doesn't really do anything");
 		menu.add(menuItem111);
 
 		menuBar.add(menu);
 
 		menu = new JMenu("Job Offers");
 		menu.setMnemonic(KeyEvent.VK_O);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"This menu does nothing");
+
 		JMenuItem menuItem1111 = new JMenuItem("List", KeyEvent.VK_U);
 
-		menuItem1111.getAccessibleContext().setAccessibleDescription(
-				"This doesn't really do anything");
 		menu.add(menuItem1111);
 
-		JMenuItem menuItem11111 = new JMenuItem("Search", KeyEvent.VK_U);
+		ActionListener listJobOfferAction = new ActionListener() {
 
-		menuItem11111.getAccessibleContext().setAccessibleDescription(
-				"This doesn't really do anything");
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ListJobOffers listJobOffers = new ListJobOffers(recruiter);
+				listJobOffers.setVisible(true);
+			}
+		};
+
+		menuItem1111.addActionListener(listJobOfferAction);
+		JMenuItem menuItem11111 = new JMenuItem("Search", KeyEvent.VK_U);
 		menu.add(menuItem11111);
+
+		menuBar.add(menu);
+
+		JMenuItem menuAddOffer = new JMenuItem("Add", KeyEvent.VK_A);
+		menu.add(menuAddOffer);
+
+		ActionListener addJobOfferAction = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				AddJobOffer addJobOffer = new AddJobOffer(recruiter);
+				addJobOffer.setVisible(true);
+
+			}
+		};
+		menuAddOffer.addActionListener(addJobOfferAction);
 		menuBar.add(menu);
 
 		menu = new JMenu("Job Applications");
 		menu.setMnemonic(KeyEvent.VK_A);
-		menu.getAccessibleContext().setAccessibleDescription(
-				"This menu does nothing");
+		JMenuItem menuItemJobApp = new JMenuItem("List", KeyEvent.VK_U);
+
+		menu.add(menuItemJobApp);
+
+		ActionListener jobApplicationAction = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				ListCandidateOffers listCandidateOffers = new ListCandidateOffers(
+						recruiter);
+				listCandidateOffers.setVisible(true);
+			}
+		};
+		menuItemJobApp.addActionListener(jobApplicationAction);
 		menuBar.add(menu);
 
 		panelCentre.add(menuBar);
 
 		JButton logOut = new JButton("Logout");
 		ActionListener logoutActionListener = new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				SignIn signIn = new SignIn();
