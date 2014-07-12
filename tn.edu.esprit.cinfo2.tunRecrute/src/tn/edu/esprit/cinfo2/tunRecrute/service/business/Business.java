@@ -71,7 +71,7 @@ public class Business {
 
 	public boolean applyForJobOffer(Candidate candidate, JobOffers jobOffer) {
 		CandidateOffer candidateOffer = new CandidateOffer(0, candidate,
-				jobOffer, "new");
+				jobOffer,0,"new");
 		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
 		return candidateOfferImpl.add(candidateOffer);
 	}
@@ -80,6 +80,20 @@ public class Business {
 		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
 		CandidateOffer candidateOffer = candidateOfferImpl.findById(id);
 		candidateOffer.setStatus("viewed");
+		candidateOfferImpl.update(id, candidateOffer);
+	}
+	
+	public void callForInterview(int id) {
+		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
+		CandidateOffer candidateOffer = candidateOfferImpl.findById(id);
+		candidateOffer.setStatus("called for interview");
+		candidateOfferImpl.update(id, candidateOffer);
+	}
+	
+	public void hire(int id) {
+		CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
+		CandidateOffer candidateOffer = candidateOfferImpl.findById(id);
+		candidateOffer.setStatus("hired");
 		candidateOfferImpl.update(id, candidateOffer);
 	}
 

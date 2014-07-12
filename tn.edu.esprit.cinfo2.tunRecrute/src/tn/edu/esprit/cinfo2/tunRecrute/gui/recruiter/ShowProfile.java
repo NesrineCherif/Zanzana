@@ -1,18 +1,12 @@
-package tn.edu.esprit.cinfo2.tunRecrute.gui.candidate;
+package tn.edu.esprit.cinfo2.tunRecrute.gui.recruiter;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,41 +15,40 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Candidate;
-import tn.edu.esprit.cinfo2.tunRecrute.domain.CandidateOffer;
-import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
+import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
 import tn.edu.esprit.cinfo2.tunRecrute.gui.SignIn;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateOfferImpl;
-import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.JobOffersImpl;
 
-public class ListJobOffers extends JFrame {
+public class ShowProfile extends JFrame {
 	/**
 * 
 */
 	private static final long serialVersionUID = 1L;
 
-	private Candidate candidate;
+	private Recruiter recruiter;
+
+	
+
+	public Recruiter getRecruiter() {
+		return recruiter;
+	}
+
+	public void setRecruiter(Recruiter recruiter) {
+		this.recruiter = recruiter;
+	}
+
 	JPanel panelHaut, panelBas, panelGauche, panelDroite, panelCentre,
 			panelConnexion;
 
 	// static JTextField user, mdp;
 
-	public Candidate getCandidate() {
-		return candidate;
-	}
-
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
-	}
-
-	public ListJobOffers(final Candidate candidate) {
+	public ShowProfile(final Recruiter recruiter) {
 
 		super();
-		this.setCandidate(candidate);
+		this.setRecruiter(recruiter);
+
 		/* Initialisation du JFrame */
 		this.setSize(new Dimension(300, 200));
 		// On ne pourra pas agrandir la fenetre intitul�e.
@@ -80,7 +73,7 @@ public class ListJobOffers extends JFrame {
 		contenu.add(panelCentre, BorderLayout.CENTER);
 
 		/* Ajout du formulaire de connexion � panelCentre */
-		panelCentre.setBorder(new TitledBorder("Job Offers"));
+		panelCentre.setBorder(new TitledBorder("Show Profile"));
 		panelCentre.add(panelConnexion);
 
 		JMenuBar menuBar = new JMenuBar();
@@ -100,26 +93,26 @@ public class ListJobOffers extends JFrame {
 		menuItem.getAccessibleContext().setAccessibleDescription(
 				"This doesn't really do anything");
 		menu.add(menuItem);
-
+		
 		ActionListener showProfile = new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 			}
 		};
-
+		
 		JMenuItem menuItem11 = new JMenuItem("Edit Profile", KeyEvent.VK_E);
 
 		menu.add(menuItem11);
-
-		ActionListener editProfileAction = new ActionListener() {
-
+		
+ActionListener editProfileAction = new ActionListener() {
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				EditProfile editProfile = new EditProfile(candidate);
-				editProfile.setVisible(true);
+				//EditProfile editProfile = new EditProfile(candidate);
+				//editProfile.setVisible(true);
 			}
 		};
 		menuItem11.addActionListener(editProfileAction);
@@ -159,7 +152,7 @@ public class ListJobOffers extends JFrame {
 
 		JButton logOut = new JButton("Logout");
 		ActionListener logoutActionListener = new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				SignIn signIn = new SignIn();
@@ -170,81 +163,35 @@ public class ListJobOffers extends JFrame {
 		logOut.addActionListener(logoutActionListener);
 		/* Ajout du texte de panelConnexion */
 		panelConnexion.add(new JLabel("Welcome "
-				+ this.getCandidate().getLogin()));
+				+ this.getRecruiter().getLogin()));
 		panelConnexion.add(logOut);
-
-		// Create columns names
-		String columnNames[] = { "Name", "Description", "Test link",
-				"Organization name", "Action" };
-
-		// Create some data
-		String dataValues[][] = null;
-
-		DefaultTableModel model = new DefaultTableModel() {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				// TODO Auto-generated method stub
-				return column == 4;
-			}
-		};
-
-		model.setDataVector(dataValues, columnNames);
-		JTable table = new JTable(model);
-		JobOffersImpl jobOffersImpl = new JobOffersImpl();
-
-		List<JobOffers> jobOffers = jobOffersImpl.findAll();
-		if (jobOffers == null) {
-			System.out.println("There is no job offers found");
-		} else {
-			Iterator<JobOffers> i = jobOffers.iterator();
-
-			while (i.hasNext()) {
-
-				final JobOffers jobOffer = i.next();
-				JButton apply = new JButton("Apply for :" + jobOffer.getName());
-				model.addRow(new Object[] { jobOffer.getName(),
-						jobOffer.getDescription(), jobOffer.getTestLink(),
-						jobOffer.getRecruiter().getOrganizationName(), "apply" });
-				ActionListener applyActionListener = new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						CandidateOffer candidateOffer = new CandidateOffer(0,
-								candidate, jobOffer, 0,"new");
-						CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
-						int idElement = candidateOfferImpl
-								.addCandidateOffer(candidateOffer);
-						if (idElement != 0) {
-							dispose();
-							ListCandidateOffers listCandidateOffers = new ListCandidateOffers(
-									candidate);
-							listCandidateOffers.setVisible(true);
-							Desktop desktop = Desktop.getDesktop();
-
-							try {
-								desktop.browse(new URI(jobOffer.getTestLink()
-										+ idElement));
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (URISyntaxException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-
-					}
-				};
-
-				apply.addActionListener(applyActionListener);
-
-				panelCentre.add(apply);
-			}
-		}
-
-		panelCentre.add(table.getTableHeader());
-		panelCentre.add(table);
-
+		
+		JLabel login = new JLabel("Login : "+recruiter.getLogin());
+		JLabel password = new JLabel("Password : ***********");
+		JLabel firstName = new JLabel("First Name : "+recruiter.getFirstName());
+		JLabel lastName = new JLabel("Last Name : "+recruiter.getLastName());
+		JLabel email = new JLabel("Email : "+recruiter.getEmail());
+		JLabel dateOfBirth = new JLabel("Date Of Birth : "+recruiter.getDateOfBirth());
+		JLabel organizationName = new JLabel("Oranization Name : "+recruiter.getOrganizationName());
+		JLabel organizationDescription = new JLabel("Organization Description : "+recruiter.getOrganizationDescription());
+		JLabel organizationAddress = new JLabel("Organization Address : "+recruiter.getOrganizationAddress());
+		JLabel organizationDomain = new JLabel("Organization Domain : "+recruiter.getOrganizationDomain());
+		JLabel employeesNumber = new JLabel("Employees Number : "+recruiter.getEmployeesNumber());
+		JLabel organizationTurnover = new JLabel("Organization Turnovez : "+recruiter.getOrganizationTurnover());
+		
+	
+		panelCentre.add(login);
+		panelCentre.add(password);
+		panelCentre.add(firstName);
+		panelCentre.add(lastName);
+		panelCentre.add(email);
+		panelCentre.add(dateOfBirth);
+		panelCentre.add(organizationName);
+		panelCentre.add(organizationDescription);
+		panelCentre.add(organizationAddress);
+		panelCentre.add(organizationDomain);
+		panelCentre.add(employeesNumber);
+		panelCentre.add(organizationTurnover);
 	}
 
 }

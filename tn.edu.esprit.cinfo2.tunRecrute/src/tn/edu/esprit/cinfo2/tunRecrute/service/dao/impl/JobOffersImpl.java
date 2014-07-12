@@ -198,4 +198,45 @@ public class JobOffersImpl implements IGenericDao<JobOffers> {
 
 		return instancesof;
 	}
+	
+	public List<JobOffers> findAllByRecruiter(int id) {
+		Connection connection = MySqlUtilities.GiveMeConnection();
+
+		ResultSet resultSet = null;
+System.out.println(id);
+		List<JobOffers> jobOffers = new ArrayList<JobOffers>();
+
+		try {
+
+			String strQuerry = "SELECT * FROM joboffers WHERE id_recruiter="+id;
+			Statement st = connection.createStatement();
+			st.executeQuery(strQuerry);
+			resultSet = (ResultSet) st.getResultSet();
+
+			while (resultSet.next()) {
+				int idJobOffer = resultSet.getInt("id");
+				int idRecruiter = resultSet.getInt("id_recruiter");
+
+				String name = resultSet.getString("name");
+				String description = resultSet.getString("description");
+				String testLink = resultSet.getString("testLink");
+
+				RecruiterImpl recruiterImpl = new RecruiterImpl();
+
+				JobOffers jobOffer = new JobOffers(idJobOffer, name,
+						description, testLink,
+						recruiterImpl.findById(idRecruiter));
+
+				jobOffers.add(jobOffer);
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jobOffers;
+	}
+
 }

@@ -1,4 +1,4 @@
-package tn.edu.esprit.cinfo2.tunRecrute.gui;
+package tn.edu.esprit.cinfo2.tunRecrute.gui.recruiter;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

@@ -1,4 +1,4 @@
-package tn.edu.esprit.cinfo2.tunRecrute.gui.candidate;
+package tn.edu.esprit.cinfo2.tunRecrute.gui.recruiter;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Candidate;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.CandidateOffer;
 import tn.edu.esprit.cinfo2.tunRecrute.domain.JobOffers;
+import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
 import tn.edu.esprit.cinfo2.tunRecrute.gui.SignIn;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.CandidateOfferImpl;
 import tn.edu.esprit.cinfo2.tunRecrute.service.dao.impl.JobOffersImpl;
@@ -38,24 +39,25 @@ public class ListJobOffers extends JFrame {
 */
 	private static final long serialVersionUID = 1L;
 
-	private Candidate candidate;
+	private Recruiter recruiter;
 	JPanel panelHaut, panelBas, panelGauche, panelDroite, panelCentre,
 			panelConnexion;
 
-	// static JTextField user, mdp;
-
-	public Candidate getCandidate() {
-		return candidate;
+	
+	public Recruiter getRecruiter() {
+		return recruiter;
 	}
 
-	public void setCandidate(Candidate candidate) {
-		this.candidate = candidate;
+
+	public void setRecruiter(Recruiter recruiter) {
+		this.recruiter = recruiter;
 	}
 
-	public ListJobOffers(final Candidate candidate) {
+
+	public ListJobOffers(final Recruiter recruiter) {
 
 		super();
-		this.setCandidate(candidate);
+		this.setRecruiter(recruiter);
 		/* Initialisation du JFrame */
 		this.setSize(new Dimension(300, 200));
 		// On ne pourra pas agrandir la fenetre intitul�e.
@@ -118,8 +120,7 @@ public class ListJobOffers extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				EditProfile editProfile = new EditProfile(candidate);
-				editProfile.setVisible(true);
+			
 			}
 		};
 		menuItem11.addActionListener(editProfileAction);
@@ -170,7 +171,7 @@ public class ListJobOffers extends JFrame {
 		logOut.addActionListener(logoutActionListener);
 		/* Ajout du texte de panelConnexion */
 		panelConnexion.add(new JLabel("Welcome "
-				+ this.getCandidate().getLogin()));
+				+ this.getRecruiter().getLogin()));
 		panelConnexion.add(logOut);
 
 		// Create columns names
@@ -192,7 +193,7 @@ public class ListJobOffers extends JFrame {
 		JTable table = new JTable(model);
 		JobOffersImpl jobOffersImpl = new JobOffersImpl();
 
-		List<JobOffers> jobOffers = jobOffersImpl.findAll();
+		List<JobOffers> jobOffers = jobOffersImpl.findAllByRecruiter(recruiter.getIdRecruiter());
 		if (jobOffers == null) {
 			System.out.println("There is no job offers found");
 		} else {
@@ -205,40 +206,40 @@ public class ListJobOffers extends JFrame {
 				model.addRow(new Object[] { jobOffer.getName(),
 						jobOffer.getDescription(), jobOffer.getTestLink(),
 						jobOffer.getRecruiter().getOrganizationName(), "apply" });
-				ActionListener applyActionListener = new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						CandidateOffer candidateOffer = new CandidateOffer(0,
-								candidate, jobOffer, 0,"new");
-						CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
-						int idElement = candidateOfferImpl
-								.addCandidateOffer(candidateOffer);
-						if (idElement != 0) {
-							dispose();
-							ListCandidateOffers listCandidateOffers = new ListCandidateOffers(
-									candidate);
-							listCandidateOffers.setVisible(true);
-							Desktop desktop = Desktop.getDesktop();
-
-							try {
-								desktop.browse(new URI(jobOffer.getTestLink()
-										+ idElement));
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (URISyntaxException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-
-					}
-				};
-
-				apply.addActionListener(applyActionListener);
-
-				panelCentre.add(apply);
+//				ActionListener applyActionListener = new ActionListener() {
+//
+//					@Override
+//					public void actionPerformed(ActionEvent e) {
+//						CandidateOffer candidateOffer = new CandidateOffer(0,
+//								candidate, jobOffer, "new");
+//						CandidateOfferImpl candidateOfferImpl = new CandidateOfferImpl();
+//						int idElement = candidateOfferImpl
+//								.addCandidateOffer(candidateOffer);
+//						if (idElement != 0) {
+//							dispose();
+//							ListCandidateOffers listCandidateOffers = new ListCandidateOffers(
+//									candidate);
+//							listCandidateOffers.setVisible(true);
+//							Desktop desktop = Desktop.getDesktop();
+//
+//							try {
+//								desktop.browse(new URI(jobOffer.getTestLink()
+//										+ idElement));
+//							} catch (IOException e1) {
+//								// TODO Auto-generated catch block
+//								e1.printStackTrace();
+//							} catch (URISyntaxException e1) {
+//								// TODO Auto-generated catch block
+//								e1.printStackTrace();
+//							}
+//						}
+//
+//					}
+//				};
+//
+//				apply.addActionListener(applyActionListener);
+//
+//				panelCentre.add(apply);
 			}
 		}
 

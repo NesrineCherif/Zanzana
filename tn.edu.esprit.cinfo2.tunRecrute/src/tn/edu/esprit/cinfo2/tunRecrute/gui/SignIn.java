@@ -18,8 +18,11 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import tn.edu.esprit.cinfo2.tunRecrute.domain.Candidate;
+import tn.edu.esprit.cinfo2.tunRecrute.domain.Recruiter;
 import tn.edu.esprit.cinfo2.tunRecrute.gui.candidate.HomeCandidate;
 import tn.edu.esprit.cinfo2.tunRecrute.gui.candidate.SubscribeCandidate;
+import tn.edu.esprit.cinfo2.tunRecrute.gui.recruiter.HomeRecruiter;
+import tn.edu.esprit.cinfo2.tunRecrute.gui.recruiter.SubscribeRecruiter;
 import tn.edu.esprit.cinfo2.tunRecrute.service.business.Business;
 
 public class SignIn extends JFrame {
@@ -111,8 +114,8 @@ public class SignIn extends JFrame {
 								(Candidate) result.get("Value"));
 						homeCandidate.setVisible(true);
 					} else if (result.get("UserType").equals("Recruiter")) {
-						// HomeCandidate homeCandidate =new HomeCandidate();
-						// homeCandidate.setVisible(true);
+						 HomeRecruiter homeRecruiter =new HomeRecruiter((Recruiter) result.get("Value"));
+						 homeRecruiter.setVisible(true);
 					}
 				}
 			}

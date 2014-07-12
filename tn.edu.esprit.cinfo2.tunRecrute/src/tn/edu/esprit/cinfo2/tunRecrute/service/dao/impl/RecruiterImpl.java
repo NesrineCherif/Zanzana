@@ -328,10 +328,10 @@ public class RecruiterImpl implements IGenericDao<Recruiter> {
 			resultSet = (ResultSet) st.getResultSet();
 
 			while (resultSet.next()) {
-				int idMember = resultSet.getInt("id_member");
+				int idRecruiter = resultSet.getInt("id");
 
 				String memberQuerry = "SELECT * FROM member WHERE id ="
-						+ idMember + "";
+						+ id + "";
 				Statement stMember = connection.createStatement();
 				stMember.executeQuery(memberQuerry);
 				memberResultSet = (ResultSet) stMember.getResultSet();
@@ -356,8 +356,8 @@ public class RecruiterImpl implements IGenericDao<Recruiter> {
 				long organizationTurnover = resultSet
 						.getLong("organizationTurnover");
 
-				Recruiter recruiter = new Recruiter(idMember, login, password,
-						firstName, lastName, email, dateOfBirth, id,
+				Recruiter recruiter = new Recruiter(id, login, password,
+						firstName, lastName, email, dateOfBirth, idRecruiter,
 						organizationName, organizationDescription,
 						organizationAddress, organizationDomain,
 						employeesNumber, organizationTurnover);

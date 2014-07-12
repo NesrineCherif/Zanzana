@@ -4,18 +4,28 @@ public class CandidateOffer {
 	private int id;
 	private Candidate candidate;
 	private JobOffers jobOffer;
+	private int score;
 	private String status; 
 
 	
 
+	
+
+
+
 	public CandidateOffer(int id, Candidate candidate, JobOffers jobOffer,
-			String status) {
+			int score, String status) {
 		super();
 		this.id = id;
 		this.candidate = candidate;
 		this.jobOffer = jobOffer;
+		this.score = score;
 		this.status = status;
 	}
+
+
+
+
 
 
 
@@ -28,9 +38,14 @@ public class CandidateOffer {
 		result = prime * result + id;
 		result = prime * result
 				+ ((jobOffer == null) ? 0 : jobOffer.hashCode());
+		result = prime * result + score;
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
+
+
+
+
 
 
 
@@ -55,6 +70,8 @@ public class CandidateOffer {
 				return false;
 		} else if (!jobOffer.equals(other.jobOffer))
 			return false;
+		if (score != other.score)
+			return false;
 		if (status == null) {
 			if (other.status != null)
 				return false;
@@ -65,9 +82,17 @@ public class CandidateOffer {
 
 
 
+
+
+
+
 	public int getId() {
 		return id;
 	}
+
+
+
+
 
 
 
@@ -77,9 +102,17 @@ public class CandidateOffer {
 
 
 
+
+
+
+
 	public Candidate getCandidate() {
 		return candidate;
 	}
+
+
+
+
 
 
 
@@ -89,9 +122,17 @@ public class CandidateOffer {
 
 
 
+
+
+
+
 	public JobOffers getJobOffer() {
 		return jobOffer;
 	}
+
+
+
+
 
 
 
@@ -101,9 +142,37 @@ public class CandidateOffer {
 
 
 
+
+
+
+
+	public int getScore() {
+		return score;
+	}
+
+
+
+
+
+
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+
+
+
+
+
 	public String getStatus() {
 		return status;
 	}
+
+
+
+
 
 
 
@@ -113,10 +182,18 @@ public class CandidateOffer {
 
 
 
+
+
+
+
 	@Override
 	public String toString() {
 		return "CandidateOffer [id=" + id + ", candidate=" + candidate
-				+ ", jobOffer=" + jobOffer + ", status=" + status + "]";
+				+ ", jobOffer=" + jobOffer + ", score=" + score + ", status="
+				+ status + "]";
 	}
 
+
+
+	
 }

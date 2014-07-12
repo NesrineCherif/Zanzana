@@ -30,7 +30,8 @@ public class CandidateOfferImpl implements IGenericDao<CandidateOffer> {
 			String strQuerry = "INSERT INTO candidate_offer " + "VALUES ("
 					+ candidateOffer.getId() + ","
 					+ candidateOffer.getCandidate().getIdCandidate() + ","
-					+ candidateOffer.getJobOffer().getId() + " ,'"
+					+ candidateOffer.getJobOffer().getId() + " ,"
+					+ null + " ,'"
 					+ candidateOffer.getStatus() + "' )";
 
 			st.executeUpdate(strQuerry);
@@ -135,12 +136,13 @@ public class CandidateOfferImpl implements IGenericDao<CandidateOffer> {
 				int idCandidateOffer = resultSet.getInt("id");
 				int idCandidate = resultSet.getInt("id_candidate");
 				int idJobOffer = resultSet.getInt("id_jobOffer");
+				int score = resultSet.getInt("score");
 				String status= resultSet.getString("status");
 				CandidateImpl candidateImpl = new CandidateImpl();
 				JobOffersImpl offersImpl = new JobOffersImpl();
 				CandidateOffer candidateOffer = new CandidateOffer(
 						idCandidateOffer, candidateImpl.findById(idCandidate),
-						offersImpl.findById(idJobOffer),status);
+						offersImpl.findById(idJobOffer),score,status);
 
 				candidateOffers.add(candidateOffer);
 			}
@@ -172,12 +174,13 @@ public class CandidateOfferImpl implements IGenericDao<CandidateOffer> {
 				int idCandidateOffer = resultSet.getInt("id");
 				int idJobOffer = resultSet.getInt("id_jobOffer");
 				int idCandidate = resultSet.getInt("id_candidate");
+				int score = resultSet.getInt("score");
 				String status= resultSet.getString("status");
 				CandidateImpl candidateImpl = new CandidateImpl();
 				JobOffersImpl offersImpl = new JobOffersImpl();
 				CandidateOffer candidateOffer = new CandidateOffer(
 						idCandidateOffer, candidateImpl.findById(idCandidate),
-						offersImpl.findById(idJobOffer),status);
+						offersImpl.findById(idJobOffer),score,status);
 
 				return candidateOffer;
 			}
@@ -209,12 +212,52 @@ public class CandidateOfferImpl implements IGenericDao<CandidateOffer> {
 				int idCandidateOffer = resultSet.getInt("id");
 				int idCandidate = resultSet.getInt("id_candidate");
 				int idJobOffer = resultSet.getInt("id_jobOffer");
+				int score = resultSet.getInt("score");
 				String status= resultSet.getString("status");
 				CandidateImpl candidateImpl = new CandidateImpl();
 				JobOffersImpl offersImpl = new JobOffersImpl();
 				CandidateOffer candidateOffer = new CandidateOffer(
 						idCandidateOffer, candidateImpl.findById(idCandidate),
-						offersImpl.findById(idJobOffer),status);
+						offersImpl.findById(idJobOffer),score,status);
+
+				candidateOffers.add(candidateOffer);
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return candidateOffers;
+	}
+	
+	
+	public List<CandidateOffer> findAllByRecruiter(int id) {
+		Connection connection = MySqlUtilities.GiveMeConnection();
+
+		ResultSet resultSet = null;
+
+		List<CandidateOffer> candidateOffers = new ArrayList<CandidateOffer>();
+
+		try {
+
+			String strQuerry = "select co.* from candidate_offer co where co.id_jobOffer in (select jo.id from joboffers jo where jo.id_recruiter="+id+") ";
+			Statement st = connection.createStatement();
+			st.executeQuery(strQuerry);
+			resultSet = (ResultSet) st.getResultSet();
+
+			while (resultSet.next()) {
+				int idCandidateOffer = resultSet.getInt("id");
+				int idCandidate = resultSet.getInt("id_candidate");
+				int idJobOffer = resultSet.getInt("id_jobOffer");
+				int score = resultSet.getInt("score");
+				String status= resultSet.getString("status");
+				CandidateImpl candidateImpl = new CandidateImpl();
+				JobOffersImpl offersImpl = new JobOffersImpl();
+				CandidateOffer candidateOffer = new CandidateOffer(
+						idCandidateOffer, candidateImpl.findById(idCandidate),
+						offersImpl.findById(idJobOffer),score,status);
 
 				candidateOffers.add(candidateOffer);
 			}
@@ -233,5 +276,39 @@ public class CandidateOfferImpl implements IGenericDao<CandidateOffer> {
 			instancesof = new CandidateOfferImpl();
 
 		return instancesof;
+	}
+	
+	public int addCandidateOffer(CandidateOffer candidateOffer) {
+		ResultSet rs = null;
+		int updateCount = 0;
+		int idElement = 0;
+		Connection connection = (Connection) MySqlUtilities.GiveMeConnection();
+		try {
+
+			Statement st = connection.createStatement();
+
+			String strQuerry = "INSERT INTO candidate_offer " + "VALUES ("
+					+ candidateOffer.getId() + ","
+					+ candidateOffer.getCandidate().getIdCandidate() + ","
+					+ candidateOffer.getJobOffer().getId() + " ,"
+					+ null + " ,'"
+					+ candidateOffer.getStatus() + "' )";
+
+			st.executeUpdate(strQuerry);
+			updateCount = st.getUpdateCount();
+			rs = (ResultSet) st.getGeneratedKeys();
+			if (rs.next() && updateCount != 0) {
+				System.out.println("Candidate_Offer is inserted");
+				idElement = rs.getInt(1);
+
+			}
+
+			st.close();
+			connection.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return idElement;
 	}
 }
